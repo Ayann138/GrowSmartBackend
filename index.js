@@ -4,7 +4,8 @@ const cors = require('cors')
 require('./db/config')
 const user = require("./db/Schemas/Users")
 const query = require("./db/Schemas/Queries")
-const auth = require("./db/Middleware/auth")
+const Jwt = require("jsonwebtoken")
+const jwtKey = "gwfyp"
 const app = express()
 app.use(cors())
 app.use(express.json());
@@ -16,16 +17,22 @@ app.post("/register" , async(req, res) =>{
     let User = new user(req.body)
     let result = await User.save()
     result = result.toObject();
-   // delete result.password
-   res.send(result)
+    if (result) {
+        Jwt.sign({User},jwtKey,{expiresIn:"1min"},(err,token)=>{
+            if(err){
+                res.send({result: "Something went wrong!!!"})
+            }
+            res.send({result, auth: token})
+        }) //(first mei jo data send krna hai wo ayy ga, second mei callback function)
+    }
 })
-app.post("/addQuery" , async(req,res) =>{
+app.post("/addQuery" ,verifyToken, async(req,res) =>{
     let Query = new query(req.body)
     let result = await Query.save()
     result = result.toObject()
     res.send(result)
 })
-app.get("/getQueries" , async(req,res) =>{
+app.get("/getQueries" ,verifyToken, async(req,res) =>{
     let queries  = await query.find();
     if(queries.length > 0){
         res.send(queries)
@@ -33,7 +40,7 @@ app.get("/getQueries" , async(req,res) =>{
         res.send("No Product Found!!")
     }
 })
-app.post("/addComment" , async(req,res) =>{
+app.post("/addComment" ,verifyToken, async(req,res) =>{
     let id = req.body.queryId
     let commentedBy = req.body.personName
     let commentText = req.body.comment
@@ -48,7 +55,7 @@ app.post("/addComment" , async(req,res) =>{
     res.send(updatedQuery)
 
 })
-app.get("/getComments/:id" , async(req,res) =>{
+app.get("/getComments/:id" ,verifyToken, async(req,res) =>{
     let id = req.params.id
    // console.log(id , "From get comments")
     const queryCurrent = await query.findById(id)
@@ -63,7 +70,12 @@ app.post('/login', async (req, res) => {
     if (req.body.password && req.body.email) {
         let User = await user.findOne(req.body);
         if (User) {
-            res.send(User)
+            Jwt.sign({User},jwtKey,{expiresIn:"1hr"},(err,token)=>{
+                if(err){
+                    res.send({result: "Something went wrong!!!"})
+                }
+                res.send({User, auth: token})
+            }) 
         }
         else {
             res.send({result: "User not found"})
@@ -75,7 +87,25 @@ app.post('/login', async (req, res) => {
     }
 
 })
+function verifyToken(req, res, next){
+    let token = req.header('Authorization')
+    if (token){
+        Jwt.verify(token,jwtKey,(err, valid)=>{
+            if(err){
+                res.status(401).send({result: "Please enter valid token"})
+                console.log("Please add valid token")
 
+            }else[
+                next()
+            ]
+
+        })
+    }else{
+        res.status(403).send({result: "Please add token"})
+        console.log("Please add token")
+    }
+  //  console.log("Middleware called " , token)
+}
 app.listen(8000)
 
 
