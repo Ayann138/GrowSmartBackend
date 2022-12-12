@@ -1,9 +1,10 @@
-var cors = require('cors')
+
 const express = require("express")
 const cors = require('cors')
 require('./db/config')
 const user = require("./db/Schemas/Users")
 const query = require("./db/Schemas/Queries")
+const auth = require("./db/Middleware/auth")
 const app = express()
 app.use(cors())
 app.use(express.json());
@@ -31,6 +32,32 @@ app.get("/getQueries" , async(req,res) =>{
     }else{
         res.send("No Product Found!!")
     }
+})
+app.post("/addComment" , async(req,res) =>{
+    let id = req.body.queryId
+    let commentedBy = req.body.personName
+    let commentText = req.body.comment
+    console.log(id , commentText , commentedBy)
+
+    const queryCurrent = await query.findById(id)
+   // console.log(queryCurrent)
+    queryCurrent.queryComment.push(req.body)
+    //console.log(queryCurrent)
+    const updatedQuery = await query.findByIdAndUpdate(id , queryCurrent , {new: true})
+    //console.log(updatedQuery)
+    res.send(updatedQuery)
+
+})
+app.get("/getComments/:id" , async(req,res) =>{
+    let id = req.params.id
+   // console.log(id , "From get comments")
+    const queryCurrent = await query.findById(id)
+    if(queryCurrent.queryComment.length > 0){
+        res.send(queryCurrent.queryComment)
+    }else{
+        console.log("Nooooo")
+    }
+
 })
 app.post('/login', async (req, res) => {
     if (req.body.password && req.body.email) {

@@ -14,6 +14,11 @@ const mongoose = require('mongoose')
     },
     queryLikeS:[{
         type:String
+    }],
+    queryComment:[{
+        queryId: String,
+        commentText: String,
+        commentedBy: String
     }]
  })
 
