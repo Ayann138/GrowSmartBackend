@@ -1,6 +1,8 @@
 
 const express = require("express")
 const cors = require('cors')
+const bcrypt = require("bcrypt")
+const multer = require('multer')
 require('./db/config')
 const user = require("./db/Schemas/Users")
 const query = require("./db/Schemas/Queries")
@@ -10,6 +12,18 @@ const app = express()
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+//Multer
+const storage = multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'images')
+    },
+    filename: (req,file,cb)=>{
+        cb(null,file.originalname)
+    }
+})
+const upload = multer({storage:storage})
+
+
 app.get("/" , (req, res) => {
     res.send("App is working")
 })
@@ -26,6 +40,33 @@ app.post("/register" , async(req, res) =>{
         }) //(first mei jo data send krna hai wo ayy ga, second mei callback function)
     }
 })
+app.post("/changePassword/:id",async(req,res) => {
+    let id = req.params.id
+    let data = await user.findById(id)
+    let pass = req.body.password
+    let cpass = req.body.cpassword
+    let newPass = req.body.newPass
+    console.log(data)
+    if(cpass == pass){
+        if(pass == data.password){
+            data.password = newPass
+            let result = await data.save()
+            res.send("Password Updated")
+        }
+        else{
+            res.send("Incorrect Password")
+        }
+    }else{
+        res.send("Pass and Cpass doen not match")
+    }
+   
+
+})
+app.get("/nutritionProfiles",async(req,res) =>{
+    let nutrition = await user.find({role:"Nutrition"})
+    res.send(nutrition)
+})
+
 app.post("/addQuery" ,verifyToken, async(req,res) =>{
     let Query = new query(req.body)
     let result = await Query.save()
@@ -62,29 +103,37 @@ app.get("/getComments/:id" ,verifyToken, async(req,res) =>{
     if(queryCurrent.queryComment.length > 0){
         res.send(queryCurrent.queryComment)
     }else{
-        console.log("Nooooo")
+        res.send("Nooooo")
     }
 
 })
 app.post('/login', async (req, res) => {
-    if (req.body.password && req.body.email) {
-        let User = await user.findOne(req.body);
-        if (User) {
-            Jwt.sign({User},jwtKey,{expiresIn:"1hr"},(err,token)=>{
-                if(err){
-                    res.send({result: "Something went wrong!!!"})
-                }
-                res.send({User, auth: token})
-            }) 
+    try{
+        const Upass = req.body.password;
+        const Uemail = req.body.email;
+        if (Upass && Uemail) {
+            let User = await user.findOne({ email: Uemail });
+            const isMatch = await bcrypt.compare(Upass , User.password)
+            if (isMatch) {
+                Jwt.sign({User},jwtKey,{expiresIn:"1hr"},(err,token)=>{
+                    if(err){
+                        res.send({result: "Something went wrong!!!"})
+                    }
+                    res.send({User, auth: token})
+                }) 
+            }
+            else {
+                res.send({result: "User not found"})
+            }
         }
         else {
-            res.send({result: "User not found"})
+            res.send("Provide Complete info")
+    
         }
+    }catch(err){
+        res.status(400).send("error in catch" + err);
     }
-    else {
-        res.send("Provide Complete info")
-
-    }
+  
 
 })
 function verifyToken(req, res, next){
