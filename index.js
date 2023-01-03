@@ -6,6 +6,7 @@ const multer = require('multer')
 require('./db/config')
 const user = require("./db/Schemas/Users")
 const query = require("./db/Schemas/Queries")
+const dietRequest = require("./db/Schemas/RequestDiet")
 const Jwt = require("jsonwebtoken")
 const jwtKey = "gwfyp"
 const app = express()
@@ -62,7 +63,7 @@ app.post("/changePassword/:id",async(req,res) => {
    
 
 })
-app.get("/nutritionProfiles",async(req,res) =>{
+app.get("/nutritionProfiles",verifyToken, async (req,res) =>{
     let nutrition = await user.find({role:"Nutrition"})
     res.send(nutrition)
 })
@@ -107,6 +108,12 @@ app.get("/getComments/:id" ,verifyToken, async(req,res) =>{
     }
 
 })
+
+app.post("/addDietRequest", async(req,res)=>{
+    let dietReq = new dietRequest(req.body)
+    let result = await dietReq.save()
+    res.send(result)
+})
 app.post('/login', async (req, res) => {
     try{
         const Upass = req.body.password;
@@ -133,8 +140,6 @@ app.post('/login', async (req, res) => {
     }catch(err){
         res.status(400).send("error in catch" + err);
     }
-  
-
 })
 function verifyToken(req, res, next){
     let token = req.header('Authorization')
