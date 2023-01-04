@@ -7,7 +7,9 @@ require('./db/config')
 const user = require("./db/Schemas/Users")
 const query = require("./db/Schemas/Queries")
 const dietRequest = require("./db/Schemas/RequestDiet")
+const Child = require('./db/Schemas/ChildGrowth')
 const Jwt = require("jsonwebtoken")
+const { request } = require("express")
 const jwtKey = "gwfyp"
 const app = express()
 app.use(cors())
@@ -82,18 +84,14 @@ app.get("/getQueries" ,verifyToken, async(req,res) =>{
         res.send("No Product Found!!")
     }
 })
+
 app.post("/addComment" ,verifyToken, async(req,res) =>{
     let id = req.body.queryId
     let commentedBy = req.body.personName
     let commentText = req.body.comment
-    console.log(id , commentText , commentedBy)
-
     const queryCurrent = await query.findById(id)
-   // console.log(queryCurrent)
     queryCurrent.queryComment.push(req.body)
-    //console.log(queryCurrent)
     const updatedQuery = await query.findByIdAndUpdate(id , queryCurrent , {new: true})
-    //console.log(updatedQuery)
     res.send(updatedQuery)
 
 })
@@ -108,8 +106,25 @@ app.get("/getComments/:id" ,verifyToken, async(req,res) =>{
     }
 
 })
+app.post("/addchild", verifyToken, async(req,res)=>{
+    try{
+        let childDetails = new Child(req.body)
+        let result = await childDetails.save()
+        result = result.toObject()
+        res.send(result)
+    }catch(err){
+        res.status(400).send("error in catch" + err);
+    }
 
-app.post("/addDietRequest", async(req,res)=>{
+})
+app.post("/addGrowthDetails/:id", async(req,res) =>{
+    let id = req.params.id
+    const currentChild = await Child.findById(id)
+    currentChild.trackParameters.push(req.body)
+    const updatedChild = await Child.findByIdAndUpdate(id,currentChild,{new:true})
+    res.send(updatedChild)
+})
+app.post("/addDietRequest",verifyToken, async(req,res)=>{
     let dietReq = new dietRequest(req.body)
     let result = await dietReq.save()
     res.send(result)
