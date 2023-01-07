@@ -48,67 +48,88 @@ app.post("/register", async (req, res) => {
     }
 })
 app.post("/changePassword/:id", async (req, res) => {
-    let id = req.params.id
-    let data = await user.findById(id)
-    let pass = req.body.password
-    let cpass = req.body.cpassword
-    let newPass = req.body.newPass
-    console.log(data)
-    if (cpass == pass) {
-        if (pass == data.password) {
-            data.password = newPass
-            let result = await data.save()
-            res.send("Password Updated")
+    try{
+        let id = req.params.id
+        let data = await user.findById(id)
+        let pass = req.body.password
+        let cpass = req.body.cpassword
+        let newPass = req.body.newPass
+        console.log(data)
+        if (cpass == pass) {
+            if (pass == data.password) {
+                data.password = newPass
+                let result = await data.save()
+                res.send("Password Updated")
+            }
+            else {
+                res.send("Incorrect Password")
+            }
+        } else {
+            res.send("Pass and Cpass doen not match")
         }
-        else {
-            res.send("Incorrect Password")
-        }
-    } else {
-        res.send("Pass and Cpass doen not match")
+
+    }catch (err) {
+        res.status(400).send({result: err});
     }
-
-
 })
 app.get("/nutritionProfiles", verifyToken, async (req, res) => {
-    let nutrition = await user.find({ role: "Nutrition" })
-    res.send(nutrition)
+    try{
+        let nutrition = await user.find({ role: "Nutrition" })
+        res.send(nutrition)
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+
 })
 
 app.post("/addQuery", verifyToken, async (req, res) => {
-    let Query = new query(req.body)
-    let result = await Query.save()
-    result = result.toObject()
-    res.send(result)
+    try{
+        let Query = new query(req.body)
+        let result = await Query.save()
+        result = result.toObject()
+        res.send(result)
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
 })
 app.get("/getQueries", verifyToken, async (req, res) => {
-    let queries = await query.find();
-    if (queries.length > 0) {
-        res.send(queries)
-    } else {
-        res.send("No Product Found!!")
+    try{
+        let queries = await query.find();
+        if (queries.length > 0) {
+            res.send(queries)
+        } else {
+            res.send("No Product Found!!")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
     }
 })
 
 app.post("/addComment", verifyToken, async (req, res) => {
-    let id = req.body.queryId
-    let commentedBy = req.body.personName
-    let commentText = req.body.comment
-    const queryCurrent = await query.findById(id)
-    queryCurrent.queryComment.push(req.body)
-    const updatedQuery = await query.findByIdAndUpdate(id, queryCurrent, { new: true })
-    res.send(updatedQuery)
+    try{
+        let id = req.body.queryId
+        const queryCurrent = await query.findById(id)
+        queryCurrent.queryComment.push(req.body)
+        const updatedQuery = await query.findByIdAndUpdate(id, queryCurrent, { new: true })
+        res.send(updatedQuery)
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
 
 })
 app.get("/getComments/:id", verifyToken, async (req, res) => {
-    let id = req.params.id
-    // console.log(id , "From get comments")
-    const queryCurrent = await query.findById(id)
-    if (queryCurrent.queryComment.length > 0) {
-        res.send(queryCurrent.queryComment)
-    } else {
-        res.send("Nooooo")
+    try{
+        let id = req.params.id
+        // console.log(id , "From get comments")
+        const queryCurrent = await query.findById(id)
+        if (queryCurrent.queryComment.length > 0) {
+            res.send(queryCurrent.queryComment)
+        } else {
+            res.send("Nooooo")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
     }
-
 })
 app.post("/addchild", verifyToken, async (req, res) => {
     try {
@@ -122,11 +143,15 @@ app.post("/addchild", verifyToken, async (req, res) => {
 
 })
 app.post("/addGrowthDetails/:id", async (req, res) => {
-    let id = req.params.id
-    const currentChild = await Child.findById(id)
-    currentChild.trackParameters.push(req.body)
-    const updatedChild = await Child.findByIdAndUpdate(id, currentChild, { new: true })
-    res.send(updatedChild)
+    try{
+        let id = req.params.id
+        const currentChild = await Child.findById(id)
+        currentChild.trackParameters.push(req.body)
+        const updatedChild = await Child.findByIdAndUpdate(id, currentChild, { new: true })
+        res.send(updatedChild)
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
 })
 app.post("/addDietRequest", verifyToken, async (req, res) => {
     try{
