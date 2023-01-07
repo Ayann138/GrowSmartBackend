@@ -14,8 +14,7 @@ const dietSchema = new mongoose.Schema({
         trim: true
     },
     age:{
-        type: Number,
-        required: true
+        type: Number
     },
     phoneNumber:{
         type: Number,
@@ -30,6 +29,16 @@ const dietSchema = new mongoose.Schema({
         type: String
     },
     parentId:{
+        type: String,
+        require: true
+    },
+    requestDate:{
+        type:String
+    },
+    requestTime:{
+        type:String
+    },
+    parentName:{
         type: String,
         require: true
     },
