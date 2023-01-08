@@ -36,7 +36,7 @@ app.post("/register", async (req, res) => {
         let result = await User.save()
         result = result.toObject();
         if (result) {
-            Jwt.sign({ User }, jwtKey, { expiresIn: "1hr" }, (err, token) => {
+            Jwt.sign({ User }, jwtKey, { expiresIn: "5hr" }, (err, token) => {
                 if (err) {
                     res.send({ result: "Something went wrong!!!" })
                 }
@@ -82,7 +82,7 @@ app.get("/nutritionProfiles", verifyToken, async (req, res) => {
 
 })
 
-app.post("/addQuery", verifyToken, async (req, res) => {
+app.post("/addQuery", async (req, res) => {
     try{
         let Query = new query(req.body)
         let result = await Query.save()
@@ -183,19 +183,19 @@ app.post("/addDietRequest", verifyToken, async (req, res) => {
     try{
         let dietReq = new dietRequest(req.body)
         let result = await dietReq.save()
-        res.send(result)
+        res.send({result: res})
     } catch (err) {
-        res.status(400).send("error in catch" + err);
+        res.status(400).send({result: "error in catch" + err});
     }
     
 })
 app.get("/getDietRequests/:id", async(req,res) =>{
     try{
         let nid = req.params.id
-        let result = await dietRequest.find({ nutritionId: nid })
-        res.send(result)
+        let res = await dietRequest.find({ nutritionId: nid })
+        res.send({result: res})
     } catch (err) {
-        res.status(400).send("error in catch" + err);
+        res.status(400).send({result: "error in catch" + err});
     }
     
 
@@ -209,7 +209,7 @@ app.post('/login', async (req, res) => {
             if (User) {
                 const isMatch = await bcrypt.compare(Upass, User.password)
                 if (isMatch) {
-                    Jwt.sign({ User }, jwtKey, { expiresIn: "1hr" }, (err, token) => {
+                    Jwt.sign({ User }, jwtKey, { expiresIn: "5hr" }, (err, token) => {
                         if (err) {
                             res.send({ result: "Something went wrong!!!" })
                         }

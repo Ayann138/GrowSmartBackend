@@ -8,18 +8,8 @@ const dietSchema = new mongoose.Schema({
         require: true,
         trim: true
     },
-    email:{
-        type: String,
-        lowercase: true,
-        trim: true
-    },
     age:{
         type: Number
-    },
-    phoneNumber:{
-        type: Number,
-        minLength: 11,
-        maxlength: 11,
     },
     allergyDesc:{
         type: String
