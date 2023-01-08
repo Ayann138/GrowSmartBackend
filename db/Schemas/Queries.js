@@ -13,7 +13,8 @@ const mongoose = require('mongoose')
         require: true
     },
     queryLikeS:[{
-        type:String
+        likedBy:String,
+        likedById:String
     }],
     querydate:{
         type: Date

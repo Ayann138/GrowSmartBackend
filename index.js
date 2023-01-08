@@ -131,12 +131,38 @@ app.get("/getComments/:id", verifyToken, async (req, res) => {
         res.status(400).send({result: err});
     }
 })
+
+app.post("/addlike/:id", verifyToken, async (req, res) => {
+    try{
+        let id = req.params.id
+        const queryCurrent = await query.findById(id)
+        queryCurrent.queryLikeS.push(req.body)
+        const updatedQuery = await query.findByIdAndUpdate(id, queryCurrent, { new: true })
+        res.send({updatedQuery})
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+
+})
+
+app.post("/removelike/:id", verifyToken, async (req, res) => {
+    try{
+        let id = req.body.queryId
+        const queryCurrent = await query.findById(id)
+        queryCurrent.queryLikes.pull(req.body)
+        const updatedQuery = await query.findByIdAndUpdate(id, queryCurrent, { new: true })
+        res.send({updatedQuery})
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+
+})
 app.post("/addchild", verifyToken, async (req, res) => {
     try {
         let childDetails = new Child(req.body)
         let result = await childDetails.save()
         result = result.toObject()
-        res.send(result)
+        res.send({result})
     } catch (err) {
         res.status(400).send("error in catch" + err);
     }
@@ -148,7 +174,7 @@ app.post("/addGrowthDetails/:id", async (req, res) => {
         const currentChild = await Child.findById(id)
         currentChild.trackParameters.push(req.body)
         const updatedChild = await Child.findByIdAndUpdate(id, currentChild, { new: true })
-        res.send(updatedChild)
+        res.send({updatedChild})
     }catch (err) {
         res.status(400).send({result: err});
     }
