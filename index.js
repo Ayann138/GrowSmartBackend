@@ -2,6 +2,7 @@
 const express = require("express")
 const cors = require('cors')
 const bcrypt = require("bcrypt")
+const { passwordStrength } = require('check-password-strength')
 const multer = require('multer')
 require('./db/config')
 const user = require("./db/Schemas/Users")
@@ -33,15 +34,23 @@ app.get("/", (req, res) => {
 app.post("/register", async (req, res) => {
     try{
         let User = new user(req.body)
-        let result = await User.save()
-        result = result.toObject();
-        if (result) {
-            Jwt.sign({ User }, jwtKey, { expiresIn: "5hr" }, (err, token) => {
-                if (err) {
-                    res.send({ result: "Something went wrong!!!" })
-                }
-                res.send({ result, auth: token })
-            }) //(first mei jo data send krna hai wo ayy ga, second mei callback function)
+        let Upass = req.body.password
+        console.log(passwordStrength(Upass).value)
+        if(passwordStrength(Upass).value == "Weak" || passwordStrength(Upass).value == "Too weak"){
+            res.send({ result: `Password is ${passwordStrength(Upass).value}` })
+            console.log(`Password is ${passwordStrength(Upass).value}`)
+        }else{
+            let result = await User.save()
+            console.log(`Password is ${passwordStrength(Upass).value}`)
+            result = result.toObject();
+            if (result) {
+                Jwt.sign({ User }, jwtKey, { expiresIn: "5hr" }, (err, token) => {
+                    if (err) {
+                        res.send({ result: "Something went wrong!!!" })
+                    }
+                    res.send({ result, auth: token })
+                }) //(first mei jo data send krna hai wo ayy ga, second mei callback function)
+            }
         }
     }catch (err) {
         res.status(400).send({result: err});
@@ -192,8 +201,8 @@ app.post("/addDietRequest", verifyToken, async (req, res) => {
 app.get("/getDietRequests/:id", async(req,res) =>{
     try{
         let nid = req.params.id
-        let res = await dietRequest.find({ nutritionId: nid })
-        res.send({result: res})
+        let result = await dietRequest.find({ nutritionId: nid })
+        res.send(result)
     } catch (err) {
         res.status(400).send({result: "error in catch" + err});
     }
