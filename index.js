@@ -1,6 +1,7 @@
 
 const express = require("express")
 const cors = require('cors')
+var bodyParser = require('body-parser')
 const bcrypt = require("bcrypt")
 const { passwordStrength } = require('check-password-strength')
 const multer = require('multer')
@@ -14,8 +15,9 @@ const { request } = require("express")
 const jwtKey = "gwfyp"
 const app = express()
 app.use(cors())
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use('/',express.static('images'))
 //Multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -31,15 +33,20 @@ const upload = multer({ storage: storage })
 app.get("/", (req, res) => {
     res.send("App is working")
 })
-app.post("/register", async (req, res) => {
+app.post("/register",upload.single("profilePic"), async (req, res) => {
     try{
-        let User = new user(req.body)
-        let Upass = req.body.password
+        const name = req.body.name;
+        const email = req.body.email;
+        const role = req.body.role;
+        const phone = req.body.phone;
+        const profilePic = req.file.path;
+        const Upass = req.body.password
         console.log(passwordStrength(Upass).value)
         if(passwordStrength(Upass).value == "Weak" || passwordStrength(Upass).value == "Too weak"){
             res.send({ result: `Password is ${passwordStrength(Upass).value}` })
             console.log(`Password is ${passwordStrength(Upass).value}`)
         }else{
+            let User = new user({name: name, email: email, role: role, phone: phone, password: Upass, profilePic: profilePic})
             let result = await User.save()
             console.log(`Password is ${passwordStrength(Upass).value}`)
             result = result.toObject();
@@ -48,10 +55,12 @@ app.post("/register", async (req, res) => {
                     if (err) {
                         res.send({ result: "Something went wrong!!!" })
                     }
+                    console.log(result)
                     res.send({ result, auth: token })
                 }) //(first mei jo data send krna hai wo ayy ga, second mei callback function)
             }
         }
+
     }catch (err) {
         res.status(400).send({result: err});
     }
