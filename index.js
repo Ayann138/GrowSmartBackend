@@ -115,6 +115,18 @@ app.post("/addPost",upload.single("postPic"), async (req, res) => {
         res.status(400).send({result: err});
     }
 })
+app.get("/getPosts", verifyToken, async (req, res) => {
+    try{
+        let Posts = await Post.find();
+        if (Posts.length > 0) {
+            res.send(Posts)
+        } else {
+            res.send("No Post Found!!")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+})
 app.post("/addQuery", async (req, res) => {
     try{
         let Query = new query(req.body)
@@ -131,7 +143,7 @@ app.get("/getQueries", verifyToken, async (req, res) => {
         if (queries.length > 0) {
             res.send(queries)
         } else {
-            res.send("No Product Found!!")
+            res.send("No Query Found!!")
         }
     }catch (err) {
         res.status(400).send({result: err});
