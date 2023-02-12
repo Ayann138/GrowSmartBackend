@@ -10,6 +10,7 @@ const user = require("./db/Schemas/Users")
 const query = require("./db/Schemas/Queries")
 const dietRequest = require("./db/Schemas/RequestDiet")
 const Child = require('./db/Schemas/ChildGrowth')
+const Post = require('./db/Schemas/Posts')
 const Jwt = require("jsonwebtoken")
 const { request } = require("express")
 const jwtKey = "gwfyp"
@@ -99,7 +100,21 @@ app.get("/nutritionProfiles", verifyToken, async (req, res) => {
     }
 
 })
+app.post("/addPost",upload.single("postPic"), async (req, res) => {
+    try{
+        let postDecrption = req.body.postDecrption;
+        let parentName = req.body.parentName;
+        let parentId = req.body.parentId;
+        let postPic = req.file.path;
+        let newPost = new Post({postDecrption: postDecrption,postPic: postPic, parentName: parentName, parentId: parentId })
+        let result = await newPost.save()
+        result = result.toObject()
+        res.send(result)
 
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+})
 app.post("/addQuery", async (req, res) => {
     try{
         let Query = new query(req.body)
