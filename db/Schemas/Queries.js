@@ -12,6 +12,9 @@ const mongoose = require('mongoose')
         type: String,
         require: true
     },
+    profilePic:{
+        type: String
+    },
     queryLikeS:[{
         likedBy:String,
         likedById:String
@@ -22,7 +25,8 @@ const mongoose = require('mongoose')
     queryComment:[{
         queryId: String,
         commentText: String,
-        commentedBy: String
+        commentedBy: String,
+        pic: String
     }]
  })
 
