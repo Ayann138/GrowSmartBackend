@@ -128,13 +128,17 @@ app.get("/getPosts", verifyToken, async (req, res) => {
     }
 })
 app.post("/addQuery", async (req, res) => {
+    console.log(req.file);
+    console.log(req.body);
     try{
-        let queryContent = req.body.queryContent;
-        let parentName = req.body.parentName;
-        let parentId = req.body.parentId;
-        let profilePic = req.file.path;
-        let querydate = req.body.querydate;
-        let Query = new query({queryContent: queryContent,profilePic: profilePic, parentName: parentName, parentId: parentId,querydate: querydate })
+        // let queryContent = req.body.queryContent;
+        // let parentName = req.body.parentName;
+        // let parentId = req.body.parentId;
+        // let profilePic = req.file.path;
+        // let querydate = req.body.querydate;
+      //  let Query = new query({queryContent: queryContent,profilePic: profilePic, parentName: parentName, parentId: parentId,querydate: querydate })
+      let Query = new query(req.body)
+
         let result = await Query.save()
         result = result.toObject()
         res.send(result)
