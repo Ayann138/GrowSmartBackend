@@ -7,6 +7,10 @@ const mongoose = require('mongoose')
         type: String,
         require: true
     },
+    profilePic:{
+        type: String,
+        require: true
+    },
     parentName:{
         type: String,
         require: true

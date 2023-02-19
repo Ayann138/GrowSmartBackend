@@ -105,8 +105,9 @@ app.post("/addPost",upload.single("postPic"), async (req, res) => {
         let postDecrption = req.body.postDecrption;
         let parentName = req.body.parentName;
         let parentId = req.body.parentId;
+        let profilePic = req.body.profilePic;
         let postPic = req.file.path;
-        let newPost = new Post({postDecrption: postDecrption,postPic: postPic, parentName: parentName, parentId: parentId })
+        let newPost = new Post({postDecrption: postDecrption,postPic: postPic, parentName: parentName, parentId: parentId ,profilePic:profilePic})
         let result = await newPost.save()
         result = result.toObject()
         res.send(result)
@@ -122,6 +123,19 @@ app.get("/getPosts", verifyToken, async (req, res) => {
             res.send(Posts)
         } else {
             res.send("No Post Found!!")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+})
+app.get("/getProfilePosts/:id", verifyToken, async (req, res) => {
+    try{
+        let id = req.params.id;
+        let Posts = await Post.find({ parentId: id });
+        if (Posts.length > 0) {
+            res.send(Posts)
+        } else {
+            res.send("Share posts first!!")
         }
     }catch (err) {
         res.status(400).send({result: err});
