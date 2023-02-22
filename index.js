@@ -279,6 +279,39 @@ app.post("/addchild", verifyToken, async (req, res) => {
     }
 
 })
+
+app.get("/getChilds/:id", verifyToken, async(req, res) => {
+    try{
+        let id = req.params.id;
+        let result = await Child.find({parentId: id})
+        if(result.length > 0){
+            res.send(result)
+        }else{
+            res.send("Parent has no child")
+            console.log("Parent has no child")
+        }
+
+    }catch(err){
+        res.status(400).send("error in catch" + err);
+    }
+})
+
+app.get("/getChildGrowthData/:id", verifyToken, async(req, res) => {
+    try{
+        let childId = req.params.id;
+        let result = await Child.findById(childId)
+        if(result.trackParameters.length > 0){
+            res.send(result.trackParameters)
+        }else{
+            res.send("Child has no data")
+            console.log("Child has no data")
+        }
+
+    }catch(err){
+        res.status(400).send("error in catch" + err);
+    }
+})
+
 app.post("/addGrowthDetails/:id", async (req, res) => {
     try{
         let id = req.params.id
