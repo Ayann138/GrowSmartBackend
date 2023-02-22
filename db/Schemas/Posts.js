@@ -27,9 +27,9 @@ const mongoose = require('mongoose')
         type: Date
     },
     postComment:[{
-        postId: String,
         commentText: String,
-        commentedBy: String
+        commentedBy: String,
+        profilePic: String
     }]
  })
 

@@ -13,6 +13,7 @@ const Child = require('./db/Schemas/ChildGrowth')
 const Post = require('./db/Schemas/Posts')
 const Jwt = require("jsonwebtoken")
 const { request } = require("express")
+const Query = require("./db/Schemas/Queries")
 const jwtKey = "gwfyp"
 const app = express()
 app.use(cors())
@@ -140,6 +141,48 @@ app.get("/getProfilePosts/:id", verifyToken, async (req, res) => {
     }catch (err) {
         res.status(400).send({result: err});
     }
+})
+app.get("/getProfileQueries/:id", async (req, res) => {
+    try{
+        let id = req.params.id;
+        let Queries = await Query.find({ parentId: id });
+        if (Queries.length > 0) {
+            res.send(Queries)
+        } else {
+            res.send("No Query Found!!")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+})
+app.post("/addPostComments/:id", verifyToken, async (req, res) => {
+    try{
+        let id = req.params.id
+        console.log(id)
+        console.log(req.body)
+        let postCurrent = await Post.findById(id)
+        postCurrent.postComment.push(req.body)
+        const updatedPost = await Post.findByIdAndUpdate(id , postCurrent, { new: true })
+        console.log(updatedPost)
+        res.send(updatedPost)
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+
+})
+app.get("/getPostComments/:id",verifyToken, async (req, res) => {
+    try{
+        let id = req.params.id
+        let postCurrent = await Post.findById(id)
+        if(postCurrent.postComment.length > 0){
+            res.send(postCurrent.postComment)
+        }else{
+            res.send("No comment on that post.")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+
 })
 app.post("/addQuery", async (req, res) => {
     console.log(req.file);
