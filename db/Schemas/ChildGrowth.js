@@ -20,6 +20,18 @@ const ChildSchema = new mongoose.Schema({
         type: Date,
         require: true
     },
+    Height:{
+        type: Number,
+        require: true
+    },
+    Weight:{
+        type: Number,
+        require: true
+    },
+    headCircum:{
+        type: Number,
+        require: true
+    },
     parentId:{
         type: String,
         require: true
