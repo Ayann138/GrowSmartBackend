@@ -22,6 +22,8 @@ router.post("/addGrowthDetails/:id", async (req, res) => {
         currentChild.trackParameters.push(req.body)
         const updatedChild = await Child.findByIdAndUpdate(id, currentChild, { new: true })
         res.send({updatedChild})
+        console.log(id)
+        console.log(req.body)
     }catch (err) {
         res.status(400).send({result: err});
     }

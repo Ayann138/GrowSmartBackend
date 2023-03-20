@@ -1,24 +1,31 @@
 const express = require("express")
 const router=express.Router()
-const verifyToken = require('../Middleware/auth')
+const verifyToken = require('../Middleware/auth');
 const query = require("../models/Queries")
+var Filter = require('bad-words'),
+filter = new Filter();
+filter.addWords('bullshit')
 router.post("/addQuery", async (req, res) => {
-    console.log(req.file);
-    console.log(req.body);
-    try{
-        // let queryContent = req.body.queryContent;
-        // let parentName = req.body.parentName;
-        // let parentId = req.body.parentId;
-        // let profilePic = req.file.path;
-        // let querydate = req.body.querydate;
-      //  let Query = new query({queryContent: queryContent,profilePic: profilePic, parentName: parentName, parentId: parentId,querydate: querydate })
-      let Query = new query(req.body)
-
-        let result = await Query.save()
-        result = result.toObject()
-        res.send(result)
-    }catch (err) {
-        res.status(400).send({result: err});
+    let count = 0;
+    var queryContent = filter.clean(req.body.queryContent)
+    for(let i = 0 ; i < queryContent.length; i++){
+        if(queryContent[i] == "*"){
+            count += 1
+        }   
+    }
+    if(count == 0){
+        try{
+            let Query = new query(req.body)
+      
+              let result = await Query.save()
+              result = result.toObject()
+              res.send(result)
+          }catch (err) {
+              res.status(400).send({result: err});
+          }
+    }else{
+        console.log("Query contains impropriate words")
+        res.send("Query contains impropriate words")
     }
 })
 router.get("/getQueries", verifyToken, async (req, res) => {
@@ -33,7 +40,27 @@ router.get("/getQueries", verifyToken, async (req, res) => {
         res.status(400).send({result: err});
     }
 })
-
+router.get("/deleteQuery/:id",verifyToken,  async(req, res) => { 
+    try{
+        const query =  await query.findByIdAndDelete(req.params.id);
+        res.send("Query Deleted")
+    }catch(err){
+        res.status(401).send(err)
+    }
+})
+router.get("/getProfileQueries/:id", verifyToken, async (req, res) => {
+    try{
+        let id = req.params.id;
+        let Queries = await query.find({ parentId: id });
+        if (Queries.length > 0) {
+            res.send(Queries)
+        } else {
+            res.send("Share posts first!!")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+})
 router.post("/addComment", verifyToken, async (req, res) => {
     try{
         let id = req.body.queryId
