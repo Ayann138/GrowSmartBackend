@@ -1,10 +1,9 @@
 const express = require('express')
 const nutriDetails = require('../models/NutritionDetails')
-
 const router = express.Router()
 router.get('/getRequests' , async(req,res) => {
     try{
-        let nutRequest = await nutriDetails.find({approveStatus: false})
+        let nutRequest = await nutriDetails.find({approveStatus: "Pending"})
         res.send(nutRequest)
         console.log(nutRequest)
     }catch(err){
@@ -13,12 +12,14 @@ router.get('/getRequests' , async(req,res) => {
     }
 })
 
-router.get('/approveRequests/:id', async(req,res) => {
+router.post('/approveRequests/:id', async(req,res) => {
     try{
         let id = req.params.id;
-        let nutRequest = await nutriDetails.updateOne({_id, id},{ $set: { approveStatus: True }} )
-        res.send(nutRequest)
+        let status = req.body.status
+        console.log(status)
+        let nutRequest = await nutriDetails.updateOne({nutritionId: id},{ $set: { approveStatus: status }} )
         console.log(nutRequest)
+        res.send(nutRequest)
     }catch(err){
         console.log(err)
         res.send(err)

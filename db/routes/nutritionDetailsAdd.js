@@ -34,4 +34,16 @@ router.post("/addDetails", upload.single("resume"), async (req, res) => {
   }
 });
 
+router.get('/getNutritionDetails/:id' , async(req,res)=>{
+    try{
+        let id = req.params.id
+        let nutritionData = await nutriDetails.findOne({ nutritionId: id });
+        console.log(nutritionData)
+        res.send(nutritionData)
+    }catch(err){
+        console.log(err)
+        res.send(err)
+    }
+})
+
 module.exports = router;

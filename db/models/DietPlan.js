@@ -16,5 +16,12 @@ const DietPlanSchema = new mongoose.Schema({
         type: String,
         requre: true
     },
+    dietCalories:{
+        type: String,
+    },
+    dietTime:{
+        type: String
+    }
+
 
 })

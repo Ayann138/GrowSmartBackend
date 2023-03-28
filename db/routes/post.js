@@ -24,6 +24,7 @@ router.get("/getPosts", verifyToken, async (req, res) => {
         let Posts = await Post.find();
         if (Posts.length > 0) {
             res.send(Posts)
+            console.log(Posts)
         } else {
             res.send("No Post Found!!")
         }

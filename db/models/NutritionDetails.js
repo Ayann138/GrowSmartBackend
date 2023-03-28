@@ -31,7 +31,7 @@ const nutritionDetailsSchema = new mongoose.Schema({
         type: String
     },
     approveStatus:{
-        type: Boolean
+        type: String
     }
 
 })

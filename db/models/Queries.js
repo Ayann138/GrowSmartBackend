@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const moment = require('moment');
  const querySchema = new mongoose.Schema({
     queryContent:{
         type: String,
@@ -20,7 +21,8 @@ const mongoose = require('mongoose')
         likedById:String
     }],
     querydate:{
-        type: Date
+        type: Date,
+        default: Date.now
     },
     queryComment:[{
         queryId: String,
@@ -29,6 +31,8 @@ const mongoose = require('mongoose')
         pic: String
     }]
  })
-
+ querySchema.virtual('queryDateAgo').get(function() {
+    return moment(this.queryDate).fromNow();
+  });
  const Query = new mongoose.model("queries" , querySchema)
  module.exports = Query 

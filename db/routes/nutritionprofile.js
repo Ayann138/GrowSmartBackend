@@ -16,6 +16,7 @@ router.get("/getDietRequests/:id", async(req,res) =>{
     try{
         let nid = req.params.id
         let result = await dietRequest.find({ nutritionId: nid })
+        console.log(result)
         res.send(result)
     } catch (err) {
         res.status(400).send({result: "error in catch" + err});
