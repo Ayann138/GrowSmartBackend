@@ -81,4 +81,18 @@ router.post("/addGrowthDetails/:id", async (req, res) => {
         res.status(400).send({result: err});
     }
 })
+
+router.get("/getBMI/:id", async (req, res) => {
+    try{
+        let id = req.params.id
+        const currentChild = await Child.findById(id)
+        if(currentChild.trackParameters.length > 0){
+            res.send(currentChild.trackParameters)
+        }else{
+            res.send("No data found")
+        }
+    }catch (err) {
+        res.status(400).send({result: err});
+    }
+})
 module.exports=router;

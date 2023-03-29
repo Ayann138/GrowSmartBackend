@@ -23,9 +23,6 @@ const ChildSchema = new mongoose.Schema({
         require: true
     },
     trackParameters:[{
-        height: Number,
-        weight: Number,
-        headCircumference: Number,
         TrackDate: String,
         BMI: Number
     }],

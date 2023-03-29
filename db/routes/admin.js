@@ -54,4 +54,15 @@ router.get("/adminGetQueries", async (req, res) => {
         res.status(400).send({result: err});
     }
 })
+router.get('/RemoveQuery/:id' ,async (req,res) => {
+    try{
+        let query = await Query.findByIdAndDelete(req.params.id);
+        let result = await query.find()
+        res.send(result)
+        console.log("Query Removed")
+    }catch(err){
+        console.log(err)
+        res.send(err)
+    }
+})
 module.exports=router;

@@ -1,27 +1,23 @@
 const mongoose = require("mongoose")
-const DietPlanSchema = new mongoose.Schema({
-    nutritionId:{
-        type: String,
-        require: true
-    },
-    parentId:{
-        type: String,
-        require: true
-    },
+const dietReceiveSchema = new mongoose.Schema({
     dietRequestId:{
         type: String,
-        require: true
     },
-    dietDescription:{
+    dietDecription:{
         type: String,
         requre: true
     },
-    dietCalories:{
-        type: String,
-    },
-    dietTime:{
-        type: String
-    }
+    foodItem:[{
+        Food: String,
+        Quantity: String,
+        Weight: String,
+        Calories: String,
+        Carbs: String,
+        Category: String
+    }]
 
 
 })
+
+const dietReceive = new mongoose.model("dietReceive" , dietReceiveSchema)
+module.exports = dietReceive 

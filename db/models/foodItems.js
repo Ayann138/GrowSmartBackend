@@ -8,7 +8,7 @@ const foodSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    Weigth:{
+    Weight:{
         type: String
     },
     Calories:{

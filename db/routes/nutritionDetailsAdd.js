@@ -13,6 +13,9 @@ router.post("/addDetails", upload.single("resume"), async (req, res) => {
     let email = req.body.email;
     let phoneNo = req.body.phoneNo;
     let approveStatus = req.body.approveStatus;
+    let fee = req.body.fee;
+    let pic = req.body.pic;
+
     let nutriDetail = new nutriDetails({
       nutritionId: nutritionId,
       nutritionName: nutritionName,
@@ -23,6 +26,8 @@ router.post("/addDetails", upload.single("resume"), async (req, res) => {
       email: email,
       phoneNo: phoneNo,
       approveStatus: approveStatus,
+      pic: pic,
+      fee: fee
     });
     let result = await nutriDetail.save();
     result = result.toObject();

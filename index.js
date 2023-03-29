@@ -12,6 +12,7 @@ const NutritionDetails = require('./db/routes/nutritionDetailsAdd')
 const approveRequests = require('./db/routes/adminApproveReq')
 const admin = require('./db/routes/admin')
 const foodItem = require('./db/routes/addFood')
+const feedback = require('./db/routes/FeedBack')
 const app = express()
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -26,6 +27,7 @@ app.use(NutritionDetails)
 app.use(approveRequests)
 app.use(admin)
 app.use(foodItem)
+app.use(feedback)
 
 app.post('/checkout',async (req,res)=>{
     console.log("Request:",req.body);

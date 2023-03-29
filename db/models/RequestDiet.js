@@ -46,6 +46,11 @@ const dietSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    approved:{
+        type: String,
+        default: "No"
+        
+    }
 })
 
 const RequestDiet = new mongoose.model("dietRequest" , dietSchema)

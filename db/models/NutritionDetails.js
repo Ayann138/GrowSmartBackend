@@ -30,6 +30,9 @@ const nutritionDetailsSchema = new mongoose.Schema({
     Resume:{
         type: String
     },
+    pic:{
+        type: String
+    },
     approveStatus:{
         type: String
     }
