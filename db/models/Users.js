@@ -37,6 +37,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    rating:{
+        type: Number,
+        default: 0
+    },
+    reviews:{
+        type: Number,
+        default: 0
+    }
 })
 //use for hashing password
 userSchema.pre("save" , async function(next) {

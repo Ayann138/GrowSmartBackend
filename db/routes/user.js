@@ -8,6 +8,7 @@ const Jwt = require("jsonwebtoken")
 const jwtKey = "gwfyp"
 require('../config')
 const upload = require('./multer')
+const verifyToken = require("../Middleware/auth")
 
 
 router.get("/", (req, res) => {
@@ -73,7 +74,24 @@ router.post("/changePassword/:id", async (req, res) => {
         res.status(400).send({result: err});
     }
 })
-
+router.get('/getUserOfComment/:name/:stars' ,verifyToken, async(req,res) =>{
+    try{
+        let userName = req.params.name
+        let result = await user.find({name: userName})
+        let id = result[0]._id
+        const stars = parseInt(req.params.stars, 10) || 0; 
+        const rev = parseInt(result[0].review , 10) || 0; 
+        console.log(result[0].rating + stars)
+        const newRating = result[0].rating + stars
+        const newReviews = rev + 1
+        let updatedRating = await user.updateOne({_id: id},{ $set: { rating: newRating, reviews: newReviews }} )
+        console.log(updatedRating)
+        res.send({updatedRating})
+    }catch(err){
+        console.log(err)
+        res.send(err)
+    }
+})
 router.post('/login', async (req, res) => {
     try {
         const Upass = req.body.password;
