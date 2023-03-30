@@ -42,8 +42,9 @@ router.get("/getQueries", verifyToken, async (req, res) => {
 });
 router.get("/deleteQuery/:id", verifyToken, async (req, res) => {
   try {
-    const query = await query.findByIdAndDelete(req.params.id);
-    res.send("Query Deleted");
+    const quer = await query.findByIdAndDelete(req.params.id);
+    let queries = await query.find()
+    res.send(queries)
   } catch (err) {
     res.status(401).send(err);
   }
@@ -119,8 +120,6 @@ router.post("/like/:id", async (req, res) => {
         .status(400)
         .json({ message: "Query already liked by this user" });
     }
-
-    // Add new like to the queryLikeS array
     queryCurrent.queryLikeS.push({
       likedBy: req.body.likedBy,
       likedById: req.body.likedById,
@@ -153,7 +152,7 @@ router.delete('/like/:id/:likedById', async (req, res) => {
       // Return the updated query as the response
       res.status(200).json(savedQuery);
     } catch (err) {
-      // Handle any errors that occur
+
       res.status(500).json({ message: err.message });
     }
   });
