@@ -5,6 +5,7 @@ var bodyParser = require('body-parser')
 const uuid=require("uuid").v4
 const userRouter=require ('./db/routes/user')
 const addpost=require ('./db/routes/post')
+const addnutpost=require ('./db/routes/guideline')
 const nutritionProfiles=require ('./db/routes/nutritionprofile')
 const Query=require ('./db/routes/query')
 const Track=require ('./db/routes/track')
@@ -28,6 +29,7 @@ app.use(approveRequests)
 app.use(admin)
 app.use(foodItem)
 app.use(feedback)
+app.use(addnutpost)
 
 app.post('/checkout',async (req,res)=>{
     console.log("Request:",req.body);
@@ -64,7 +66,7 @@ app.post('/checkout',async (req,res)=>{
 
       console.log("Error:",error)
       status="failure";
-    }
+    }z
     res.json({error,status});
 })
 

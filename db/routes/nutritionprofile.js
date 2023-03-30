@@ -4,6 +4,7 @@ const nutriDetails = require("../models/NutritionDetails");
 const verifyToken = require('../Middleware/auth')
 const user = require("../models/Users")
 const dietRequest = require("../models/RequestDiet")
+const nutriDetails = require("../models/NutritionDetails");
 router.get("/nutritionProfiles", verifyToken, async (req, res) => {
     try{
         let nutrition = await nutriDetails.find({ approveStatus: "Approved" })
