@@ -24,7 +24,7 @@ const mongoose = require('mongoose')
         likedById:String
     }],
     postdate:{
-        type: Date
+        type: String
     },
     postComment:[{
         commentText: String,

@@ -32,7 +32,8 @@ router.post("/addDietRequest", verifyToken, async (req, res) => {
     try{
         let dietReq = new dietRequest(req.body)
         let result = await dietReq.save()
-        res.send({result: res})
+        console.log(result)
+        res.send(result)
     } catch (err) {
         res.status(400).send({result: "error in catch" + err});
     }

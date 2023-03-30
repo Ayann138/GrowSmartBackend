@@ -21,7 +21,7 @@ const moment = require('moment');
         likedById:String
     }],
     querydate:{
-        type: Date,
+        type: String,
         default: Date.now
     },
     queryComment:[{

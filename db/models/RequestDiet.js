@@ -50,6 +50,11 @@ const dietSchema = new mongoose.Schema({
         type: String,
         default: "No"
         
+    },
+    paid:{
+        type: String,
+        default: "No"
+        
     }
 })
 
