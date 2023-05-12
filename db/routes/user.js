@@ -80,7 +80,7 @@ router.get('/getUserOfComment/:name/:stars' ,verifyToken, async(req,res) =>{
         let result = await user.find({name: userName})
         let id = result[0]._id
         const stars = parseInt(req.params.stars, 10) || 0; 
-        const rev = parseInt(result[0].review , 10) || 0; 
+        const rev = parseInt(result[0].reviews , 10) || 0; 
         console.log(result[0].rating + stars)
         const newRating = result[0].rating + stars
         const newReviews = rev + 1

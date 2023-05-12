@@ -5,11 +5,15 @@ const dietReceiveSchema = new mongoose.Schema({
     },
     feedback:{
         type: String,
-        requre: true
+        require: true
+    },
+    stars:{
+        type: Number,
+        require: true
     },
     parentName:{
         type: String,
-        requre: true
+        require: true
     }
 
 

@@ -46,6 +46,9 @@ const dietSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    dataId:{
+        type: String
+    },
     approved:{
         type: String,
         default: "No"

@@ -24,7 +24,7 @@ const nutritionDetailsSchema = new mongoose.Schema({
         type: String
     },
     Cnic:{
-        type: Number,
+        type: String,
         require: true
     },
     Resume:{
@@ -32,6 +32,14 @@ const nutritionDetailsSchema = new mongoose.Schema({
     },
     pic:{
         type: String
+    },
+    rating:{
+        type: Number,
+        default: 0
+    },
+    reviews:{
+        type: Number,
+        default: 0
     },
     approveStatus:{
         type: String

@@ -96,4 +96,29 @@ router.get("/getBMI/:id", async (req, res) => {
         res.status(400).send({result: err});
     }
 })
+
+router.get("/getChildData/:name/:parentId", async (req, res) => {
+    try{
+        let id = req.params.parentId
+        let name = req.params.name
+        console.log(name)
+        const currentChild = await Child.findOne({childName: name , parentId: id})
+        console.log("result: " , currentChild)
+        res.send(currentChild._id)
+    }catch (err) {
+        console.log(err)
+        res.status(400).send({result: err});
+    }
+})
+router.get("/getChildDat/:Id", async (req, res) => {
+    try{
+        let id = req.params.Id
+        const currentChild = await Child.findOne({_id: id})
+        console.log("result: " , currentChild)
+        res.send(currentChild)
+    }catch (err) {
+        console.log(err)
+        res.status(400).send({result: err});
+    }
+})
 module.exports=router;

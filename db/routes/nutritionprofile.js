@@ -3,6 +3,7 @@ const router=express.Router()
 const nutriDetails = require("../models/NutritionDetails");
 const verifyToken = require('../Middleware/auth')
 const user = require("../models/Users")
+const feedback = require('../models/FeedBack')
 router.get("/nutritionProfiles", verifyToken, async (req, res) => {
     try{
         let nutrition = await nutriDetails.find({ approveStatus: "Approved" })
@@ -23,4 +24,12 @@ router.get("/nutrition/:id", verifyToken, async (req, res) => {
 
 })
 
+router.get('/getFeedback/:id', async (req, res) => {
+    try{
+        let nutFeedBack = await feedback.find({nutritionId: req.params.id})
+        res.send(nutFeedBack)
+    }catch(err){
+        res.send(err)        
+    }
+})
 module.exports=router;
