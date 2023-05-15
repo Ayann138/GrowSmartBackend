@@ -92,6 +92,19 @@ router.get('/getUserOfComment/:name/:stars' ,verifyToken, async(req,res) =>{
         res.send(err)
     }
 })
+// GET user by ID
+router.get('/users/:id', async (req, res) => {
+    try {
+      const User = await user.findById(req.params.id);
+      if (!User) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+      res.send(User);
+    } catch (err) {
+      res.status(500).send({ message: 'Server error' });
+    }
+  });
+  
 router.post('/login', async (req, res) => {
     try {
         const Upass = req.body.password;
