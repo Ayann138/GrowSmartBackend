@@ -10,7 +10,7 @@ router.post('/giveFeedBack', verifyToken , async (req,res)=>{
     try{
         let FeedBack = new feedback(req.body)
         let result = await FeedBack.save();
-        console.log(result)
+      //  console.log(result)
         res.send(result)
     }catch(err){
         res.status(400).send({result: err});
@@ -33,11 +33,11 @@ router.get('/postNutriRating/:id/:stars' ,verifyToken, async(req,res) =>{
         let id = result[0]._id
         const stars = parseInt(req.params.stars, 10) || 0; 
         const rev = parseInt(result[0].reviews , 10) || 0; 
-        console.log(result[0].rating + stars)
+       // console.log(result[0].rating + stars)
         const newRating = result[0].rating + stars
         const newReviews = rev + 1
         let updatedRating = await nutriDetails.updateOne({_id: id},{ $set: { rating: newRating, reviews: newReviews }} )
-        console.log(updatedRating)
+        //console.log(updatedRating)
         res.send({updatedRating})
     }catch(err){
         console.log(err)
