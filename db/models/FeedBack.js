@@ -3,6 +3,9 @@ const dietReceiveSchema = new mongoose.Schema({
     nutritionId:{
         type: String,
     },
+    dietRevId:{
+        type: String,
+    },
     feedback:{
         type: String,
         require: true

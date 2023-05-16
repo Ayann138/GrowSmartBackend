@@ -72,8 +72,8 @@ router.get('/getDietPlan/:id/:nid', async(req, res) => {
           }
           
           const dietReceive = await DietReceive.findOne({ dietRequestId: dietRequest._id });
-          console.log(dietReceive)
-          console.log("-----------------------------------------------------------------------------------------")
+          //console.log(dietReceive)
+         // console.log("-----------------------------------------------------------------------------------------")
           res.send(dietReceive)
  
     }catch(err){
@@ -87,7 +87,7 @@ router.get('/getgetfoodItemsId/:id' , async(req,res) => {
         const Current = await DietReceive.findById(id);
         if (Current.foodItem.length > 0) {
           res.send(Current.foodItem);
-          console.log("Id: ",Current.foodItem)
+         // console.log("Id: ",Current.foodItem)
         } else {
           res.send("Nooooo");
         }

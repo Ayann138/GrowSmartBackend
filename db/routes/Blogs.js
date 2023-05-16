@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const verifyToken = require("../Middleware/auth");
+const upload = require('./multer')
 const blog = require("../models/blogs");
 
 router.post('/addBlog' , async(req,res)=>{
@@ -26,6 +27,16 @@ router.get("/getBlogs", verifyToken, async (req, res) => {
       }
     } catch (err) {
       res.status(400).send({ result: err });
+    }
+  });
+
+  router.get("/deleteBlog/:id", async (req, res) => {
+    try {
+      const Blogs = await blog.findByIdAndDelete(req.params.id);
+      let blogss = await Blogs.find()
+      res.send(blogss)
+    } catch (err) {
+      res.status(401).send(err);
     }
   });
 module.exports = router

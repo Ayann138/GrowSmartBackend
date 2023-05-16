@@ -5,6 +5,10 @@ const moment = require('moment');
         type: String,
         require: true,
     },
+    category:{
+        type: String,
+        require: true,
+    },
     parentName:{
         type: String,
         require: true

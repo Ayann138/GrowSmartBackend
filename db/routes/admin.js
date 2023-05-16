@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/Users')
 const Post = require('../models/Posts')
 const Query = require('../models/Queries')
+const blog = require("../models/blogs");
 const router=express.Router()
 
 router.get('/getAllUser' ,async (req,res) => {
@@ -65,4 +66,19 @@ router.get('/RemoveQuery/:id' ,async (req,res) => {
         res.send(err)
     }
 })
+
+router.get("/admingetBlogs", async (req, res) => {
+    try {
+      let Blogs = await blog.find();
+      if (Blogs.length > 0) {
+       // console.log(Blogs)
+        res.send(Blogs);
+
+      } else {
+        res.send("No Blog Added!!");
+      }
+    } catch (err) {
+      res.status(400).send({ result: err });
+    }
+  });
 module.exports=router;
