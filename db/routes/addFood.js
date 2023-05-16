@@ -80,6 +80,25 @@ router.get('/getDietPlan/:id/:nid', async(req, res) => {
         res.status(400).send({result: err});
     }
 })
+router.get('/getDietPlan/:nutId/:parentId', async(req, res) => {
+    try{
+        const nutId = req.params.nutId;
+        const parentId = req.params.parentId;
+        
+        const dietRequest = await DietRequest.findOne({ parentId: parentId, nutritionId: nutId });
+        if (!dietRequest) {
+            return res.status(404).json({ error: 'User has no dietRequest' });
+        }
+          
+        const dietReceive = await DietReceive.findOne({ dietRequestId: dietRequest._id });
+        console.log(dietReceive)
+        console.log("-----------------------------------------------------------------------------------------")
+        res.send(dietReceive)
+ 
+    }catch(err){
+        res.status(400).send({result: err});
+    }
+})
 
 router.get('/getgetfoodItemsId/:id' , async(req,res) => {
     try{

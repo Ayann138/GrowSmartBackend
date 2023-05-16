@@ -67,7 +67,7 @@ router.get("/updatePaidStatus/:id", async(req,res) =>{
 
 })
 
-router.get('/getDietDietRequest/:id/:nid', async(req, res) => {
+router.get("/getDietDietRequest/:id/:nid", async(req, res) => {
     try{
         const userId = req.params.id;
         const nutId = req.params.nid
@@ -78,5 +78,33 @@ router.get('/getDietDietRequest/:id/:nid', async(req, res) => {
     }catch(err){
         res.status(400).send({result: err});
     }
+    // router.get('/dietplans/:nutritionistId/:parentId', async (req, res) => {
+    //     try {
+    //       const { nutritionistId, parentId } = req.params;
+      
+    //       // check if both nutritionist and parent exist in database
+    //       const nutritionist = await Nutritionist.findById(nutritionistId);
+    //       const parent = await Parent.findById(parentId);
+      
+    //       if (!nutritionist || !parent) {
+    //         return res.status(404).send({ message: 'Nutritionist or parent not found' });
+    //       }
+      
+    //       // check if diet plan exists for the parent created by the nutritionist
+    //       const dietRequest = await DietRequest.findOne({ nutritionistId, parentId });
+      
+    //       if (!dietRequest) {
+    //         return res.status(404).send({ message: 'Diet plan not found for parent' });
+    //       }
+      
+    //       // return diet plan to nutritionist
+    //       return res.send(dietRequest.dietPlan);
+      
+    //     } catch (err) {
+    //       console.error(err);
+    //       return res.status(500).send({ message: 'Internal server error' });
+    //     }
+    //   });
+      
 })
 module.exports=router;
