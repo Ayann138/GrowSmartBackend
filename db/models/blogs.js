@@ -13,9 +13,14 @@ const moment = require('moment');
         type: String,
         require: true
     },
+    role:{
+        type: String
+    },
+    name:{
+        type: String
+    },
     dateUploaded:{
         type: String,
-        default: Date.now
     },
  })
  const Blogs = new mongoose.model("blogs" , blogSchema)

@@ -28,7 +28,7 @@ router.get('/viewFeedBack/:nutId' , async(req,res) => {
 
 router.get('/checkFeedBack/:dietId/:nutId' ,verifyToken, async(req,res) => {
     try{
-        console.log(req.params.dietId)
+        console.log(req.params.dietIdC)
         const nutFeedBacks = await feedback.find({nutritionId: req.params.nutId , dietRevId:req.params.dietId})
         console.log(nutFeedBacks)
         res.send(nutFeedBacks)
