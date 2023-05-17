@@ -107,4 +107,18 @@ router.get("/getDietDietRequest/:id/:nid", async(req, res) => {
     //   });
       
 })
+
+router.get('/diet-requests/:parentId', async (req, res) => {
+  try {
+    const parentId = req.params.parentId;
+
+    // Fetch all diet requests matching the provided parent ID
+    const dietRequests = await dietRequest.find({ parentId });
+
+    res.json(dietRequests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+})
 module.exports=router;
