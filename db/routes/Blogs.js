@@ -9,7 +9,7 @@ router.post('/addBlog' , async(req,res)=>{
         let newBlog = new blog(req.body);
         let result = await newBlog.save();
         result = result.toObject();
-        console.log(result)
+        //console.log(result)
         res.send(result);
       } catch (err) {
         res.status(400).send({ result: err });
